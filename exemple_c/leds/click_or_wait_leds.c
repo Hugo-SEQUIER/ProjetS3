@@ -40,9 +40,6 @@ PROCESS_THREAD(ledsAlt, ev, data)
 		printf("Tour: %d\n",nbtour);//amusement supp pour compter le nombre de tour d'allumage de leds.
 
 	}
-	
-		
-
   
   PROCESS_END();
 }

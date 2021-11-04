@@ -8,7 +8,7 @@ AUTOSTART_PROCESSES(&ledsAlter);
 PROCESS_THREAD(ledsAlter, ev, data)
 {
 
-  static struct etimer et; // Struct used for the timer
+  static struct etimer et; // Struct utilisée pour timer
   static int nbtour;
 
   PROCESS_BEGIN();
