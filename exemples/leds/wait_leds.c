@@ -1,5 +1,5 @@
 #include "contiki.h"
-#include <stdio.h> /* For printf() */
+#include <stdio.h> /* pour printf() */
 #include "leds.h"
 /*---------------------------------------------------------------------------*/
 PROCESS(ledsAlter, "Allumer 3 leds");
@@ -8,7 +8,7 @@ AUTOSTART_PROCESSES(&ledsAlter);
 PROCESS_THREAD(ledsAlter, ev, data)
 {
 
-  static struct etimer et; // Struct used for the timer
+  static struct etimer et; // Struct utilisée pour timer
   static int nbtour;
 
   PROCESS_BEGIN();
@@ -17,7 +17,7 @@ PROCESS_THREAD(ledsAlter, ev, data)
 	while(1){
 		
 
-		leds_off(LEDS_BLUE)//eteind la led bleu (utile dans ce while)
+		leds_off(LEDS_BLUE);//eteind la led bleu (utile dans ce while)
 		leds_on(LEDS_RED);//allume la led rouge
 
 		etimer_set(&et, 1 * CLOCK_SECOND);//remonte le timer
@@ -37,12 +37,9 @@ PROCESS_THREAD(ledsAlter, ev, data)
 		PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
 
 		nbtour+=1;
-		printf("Tour%d\n",nbtour);//amusement supp pour compter le nombre de tour d'allumage de leds.
+		printf("Tour: %d\n",nbtour);//amusement supp pour compter le nombre de tour d'allumage de leds.
 
 	}
-	
-		
-
-  
+	 
   PROCESS_END();
 }
