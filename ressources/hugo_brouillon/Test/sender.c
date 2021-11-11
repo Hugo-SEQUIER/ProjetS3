@@ -38,7 +38,7 @@ static uip_ipaddr_t server_ipaddr;
 
 /*---------------------------------------------------------------------------*/
 PROCESS(udp_client_process,
-"UDP client process");
+"UDP sender process");
 AUTOSTART_PROCESSES(&udp_client_process);
 
 /*---------------------------------------------------------------------------*/
