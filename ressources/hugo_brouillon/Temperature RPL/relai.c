@@ -5,7 +5,7 @@
 #include "net/uip-ds6.h"
 #include "net/uip-udp-packet.h"
 #include "sys/ctimer.h"
-#include "dev/button-sensor.h"
+
 
 #ifdef WITH_COMPOWER
 #include "powertrace.h"
@@ -13,7 +13,6 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "dev/leds.h"
 
 #define UDP_CLIENT_PORT 8765
 #define UDP_SERVER_PORT 5678
@@ -33,8 +32,6 @@
 #define SEND_TIME        (random_rand() % (SEND_INTERVAL))
 #define MAX_PAYLOAD_LEN        30
 
-#include "dev/sht11-sensor.h"
-
 static struct uip_udp_conn *client_conn;
 static uip_ipaddr_t server_ipaddr;
 
@@ -42,29 +39,6 @@ PROCESS(udp_client_process,
 "UDP sender process");
 AUTOSTART_PROCESSES(&udp_client_process);
 
-static int get_temp(void) {
-    return ((sht11_sensor.value(SHT11_SENSOR_TEMP) / 10) - 396) / 10;
-}
-
-static void tcpip_handler(void) {
-    char *str;
-    if (uip_newdata()) {
-        str = uip_appdata;
-        str[uip_datalen()] = '\0';
-        printf("%s\n", str);
-    }
-}
-
-static void send_packet(void *ptr) {
-    char buf[MAX_PAYLOAD_LEN];
-
-    PRINTF("J'envoie une alerte au BR \n");
-
-    PRINTF("Température niveau : %i\n", get_temp());
-    leds_on(LEDS_RED);
-    sprintf(buf, "ALERTE!", 1);
-    uip_udp_packet_sendto(client_conn, buf, strlen(buf), &server_ipaddr, UIP_HTONS(UDP_SERVER_PORT));
-}
 
 /** Ici on set l'adresse qui est la même que dans receiver.c**/
 static void set_global_address(void) {
@@ -109,7 +83,6 @@ PROCESS_PAUSE();
 
 set_global_address();
 
-SENSORS_ACTIVATE(sht11_sensor);
 /** On set la connection **/
 client_conn = udp_new(NULL, UIP_HTONS(UDP_SERVER_PORT), NULL);
 if(client_conn == NULL) {
@@ -122,32 +95,12 @@ PROCESS_EXIT();
 udp_bind(client_conn, UIP_HTONS(
 UDP_CLIENT_PORT));
 
-#if WITH_COMPOWER
-powertrace_sniff(POWERTRACE_ON);
-#endif
-
 etimer_set(&periodic, SEND_INTERVAL);
 while(1) {
 PROCESS_YIELD();
 
-if(ev == tcpip_event) {
-tcpip_handler();
-
-}
-
-if(etimer_expired(&periodic) && get_temp()>=20) {
+if(etimer_expired(&periodic)) {
 etimer_reset(&periodic);
-ctimer_set(&backoff_timer, SEND_TIME, send_packet, NULL);
-
-#if WITH_COMPOWER
-if (print == 0) {
-powertrace_print("#P");
-}
-if (++print == 3) {
-print = 0;
-}
-#endif
-
 }
 }
 
