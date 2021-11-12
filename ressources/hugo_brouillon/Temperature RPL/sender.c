@@ -57,7 +57,10 @@ static void tcpip_handler(void) {
 
 static void send_packet(void *ptr) {
     char buf[MAX_PAYLOAD_LEN];
-    PRINTF("J'envoie une alerte a '%d' \n", &server_ipaddr);
+
+    PRINTF("J'envoie une alerte au BR \n");
+
+    PRINTF("Température niveau : %i\n", get_temp());
     leds_on(LEDS_RED);
     sprintf(buf, "ALERTE!", 1);
     uip_udp_packet_sendto(client_conn, buf, strlen(buf), &server_ipaddr, UIP_HTONS(UDP_SERVER_PORT));
@@ -105,6 +108,7 @@ PROCESS_BEGIN();
 PROCESS_PAUSE();
 
 set_global_address();
+
 SENSORS_ACTIVATE(sht11_sensor);
 /** On set la connection **/
 client_conn = udp_new(NULL, UIP_HTONS(UDP_SERVER_PORT), NULL);
@@ -131,7 +135,11 @@ tcpip_handler();
 
 }
 
-if(etimer_expired(&periodic) && get_temp()>=20) {
+if(etimer_expired(&periodic) &&
+
+get_temp()
+
+>=20) {
 etimer_reset(&periodic);
 ctimer_set(&backoff_timer, SEND_TIME, send_packet, NULL);
 

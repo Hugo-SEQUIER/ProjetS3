@@ -12,6 +12,7 @@
 #include <ctype.h>
 #include "dev/leds.h"
 
+
 #define DEBUG DEBUG_PRINT
 
 #include "net/uip-debug.h"
@@ -22,7 +23,6 @@
 #define UDP_SERVER_PORT    5678
 
 #define UDP_EXAMPLE_ID  190
-
 static struct uip_udp_conn *server_conn;
 
 PROCESS(udp_server_process,
