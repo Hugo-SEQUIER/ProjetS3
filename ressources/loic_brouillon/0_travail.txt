@@ -1,0 +1,5 @@
+- régler le problème du projet timer : le compteur ne compte pas
+- étudier les autres répertoires du wiki officiel de contiki
+- lire le livre sur tout
+- faire communiquer 2 motes
+- installer un éditeur de texte sur contiki
