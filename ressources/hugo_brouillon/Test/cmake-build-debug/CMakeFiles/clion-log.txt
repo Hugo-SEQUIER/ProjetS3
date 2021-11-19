@@ -1,0 +1,2 @@
+CMakeLists.txt not found in D:\Drive\OneDrive - umontpellier.fr\IUT\SEMESTRE3\ProjetS3\ressources\hugo_brouillon\Test Select CMakeLists.txt
+Toolchains are not configured Configure Disable profile
