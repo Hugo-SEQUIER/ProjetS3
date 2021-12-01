@@ -22,7 +22,6 @@
 #define UDP_CLIENT_PORT    8765
 #define UDP_SERVER_PORT    5678
 
-#define UDP_EXAMPLE_ID  190
 static struct uip_udp_conn *server_conn;
 
 PROCESS(udp_server_process,
@@ -52,6 +51,21 @@ tcpip_handler(void) {
         uip_create_unspecified(&server_conn->ripaddr);
 
     }
+}
+
+static void print_local_addresses(void){
+  int i;
+  uint8_t state;
+  PRINTF("Server IPv6 addresses:\n");
+  for(i = 0; i < UIP_DS6_ADDR_NB; i++) {
+    state = uip_ds6_if.addr_list[i].state;
+    if(uip_ds6_if.addr_list[i].isused &&
+       (state == ADDR_TENTATIVE || state == ADDR_PREFERRED)) {
+      PRINTF(" ");
+      uip_debug_ipaddr_print(&uip_ds6_if.addr_list[i].ipaddr);
+      PRINTF("\n");
+    }
+  }
 }
 
 /*---------------------------------------------------------------------------*/
@@ -115,7 +129,7 @@ PROCESS_EXIT();
 /** On lie la connection au local port **/
 udp_bind(server_conn, UIP_HTONS(
 UDP_SERVER_PORT));
-
+print_local_addresses();
 while(1) {
 /** Le process est en attente **/
 PROCESS_YIELD();
