@@ -9,8 +9,5 @@ static void example_function(void)
 
     //ici on envoi tous les types d'événement à notre processus
     process_post_synch(&exemple_process, PROCESS_EVENT_CONTINUE, msg); //envoi un événement au processus
-    //de manière synchrone
-    process_post(&exemple_process, PROCESS_EVENT_CONTINUE,msg); //envoi un événement au processus
-    //de manière asynchrone
-    process_poll(&exemple_process); //envoi un vote au processus
+   
 }
