@@ -24,7 +24,7 @@
 
 #define UDP_EXAMPLE_ID  190
 static struct uip_udp_conn *server_conn;
-
+static int compteur = 0;
 PROCESS(udp_server_process,
 "UDP server process");
 AUTOSTART_PROCESSES(&udp_server_process);
@@ -39,16 +39,19 @@ tcpip_handler(void) {
         /** On stock dans appdata le contenu du message **/
         appdata = (char *) uip_appdata;
         appdata[uip_datalen()] = '\0';
+        if (UIP_IP_BUF->srcipaddr.u8[sizeof(UIP_IP_BUF->srcipaddr.u8) - 1]== 2){
+          compteur = compteur + 1;
+        }
+        if (UIP_IP_BUF->srcipaddr.u8[sizeof(UIP_IP_BUF->srcipaddr.u8) - 1]== 3){
+          compteur = compteur - 1;
+        }
         /** On affiche le message reçu **/
-        PRINTF("On m'a envoye '%s' de ", appdata);
+        PRINTF("Il y a %i objets dans l'usine\n", compteur);
+
         leds_on(LEDS_BLUE);
         /** On affiche l'expéditeur du message **/
-        PRINTF("%d",
-               UIP_IP_BUF->srcipaddr.u8[sizeof(UIP_IP_BUF->srcipaddr.u8) - 1]);
-        PRINTF("\n");
         /** On envoie un accusé de reception **/
         uip_ipaddr_copy(&server_conn->ripaddr, &UIP_IP_BUF->srcipaddr);
-        uip_udp_packet_send(server_conn, "Message bien envoye !", sizeof("Message bien envoye !"));
         uip_create_unspecified(&server_conn->ripaddr);
 
     }
@@ -154,3 +157,4 @@ PROCESS_END();
 
 }
 /*---------------------------------------------------------------------------*/
+
