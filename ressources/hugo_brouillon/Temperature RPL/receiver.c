@@ -53,7 +53,11 @@ tcpip_handler(void) {
     }
 }
 
+<<<<<<< Updated upstream
 static void print_local_addresses(void){
+=======
+static void print_local_addresses(void) {
+>>>>>>> Stashed changes
   int i;
   uint8_t state;
   PRINTF("Server IPv6 addresses:\n");
