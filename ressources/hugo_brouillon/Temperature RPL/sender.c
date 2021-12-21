@@ -66,6 +66,22 @@ static void send_packet(void *ptr) {
     uip_udp_packet_sendto(client_conn, buf, strlen(buf), &server_ipaddr, UIP_HTONS(UDP_SERVER_PORT));
 }
 
+static void print_local_addresses(void) {
+  int i;
+  uint8_t state;
+  PRINTF("Server IPv6 addresses:\n");
+  for(i = 0; i < UIP_DS6_ADDR_NB; i++) {
+    state = uip_ds6_if.addr_list[i].state;
+    if(uip_ds6_if.addr_list[i].isused &&
+       (state == ADDR_TENTATIVE || state == ADDR_PREFERRED)) {
+      PRINTF(" ");
+      uip_debug_ipaddr_print(&uip_ds6_if.addr_list[i].ipaddr);
+      PRINTF("\n");
+    }
+  }
+}
+
+
 /** Ici on set l'adresse qui est la même que dans receiver.c**/
 static void set_global_address(void) {
     uip_ipaddr_t ipaddr;
@@ -125,7 +141,7 @@ UDP_CLIENT_PORT));
 #if WITH_COMPOWER
 powertrace_sniff(POWERTRACE_ON);
 #endif
-
+print_local_addresses();
 etimer_set(&periodic, SEND_INTERVAL);
 while(1) {
 PROCESS_YIELD();
